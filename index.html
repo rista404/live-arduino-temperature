@@ -22,6 +22,7 @@
 			-webkit-transition: all 0.3s;
 			-o-transition: all 0.3s;
 			transition: all 0.3s;
+
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -31,7 +32,20 @@
 			background: #fd746c;  /* fallback for old browsers */
 			background: -webkit-linear-gradient(to right, #ff9068, #fd746c);  /* Chrome 10-25, Safari 5.1-6 */
 			background: linear-gradient(to right, #ff9068, #fd746c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+		}
 
+		#mask {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			-webkit-transition: all 0.3s;
+			-o-transition: all 0.3s;
+			transition: all 0.3s;
+			opacity: 1;
 		}
 
 		h1 {
@@ -55,6 +69,7 @@
 <body>
 
 	<main id="main">
+		<div id="mask"></div>
 		<h1 id="tempDisplay">46°</h1>
 		<h2>Average temperature: <span id="averageDisplay">46</span>°</h2>
 	</main>
@@ -62,7 +77,9 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 		var socket = io.connect('http://207.154.248.133')
+
 		var main = document.getElementById('main')
+		var mask = document.getElementById('mask')
 		var tempDisplay = document.getElementById('tempDisplay')
 		var averageDisplay = document.getElementById('averageDisplay')
 
@@ -89,13 +106,25 @@
 		}
 
 		var temps = []
+		var maskOn = false
 
 		socket.on('temp:in', function(temp) {
 			tempDisplay.textContent = String(temp) + '°'
 			temps.push(Number(temp))
 			var average = temps.reduce((a, b) => a + b, 0) / temps.length
 			averageDisplay.textContent = String(average.toFixed(2))
-			main.style.background = getGradientFromCelsius(Number(temp))
+
+			if(maskOn) {
+				main.style.background = getGradientFromCelsius(Number(temp))
+				mask.style.opacity = 0
+				maskOn = false
+			}
+			else {
+				mask.style.background = getGradientFromCelsius(Number(temp))
+				mask.style.opacity = 1
+				maskOn = true
+			}
+
 		})
 	</script>
 </body>
