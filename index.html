@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		main, html, body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		}
+
+		main {
+			-webkit-transition: all 0.3s;
+			-o-transition: all 0.3s;
+			transition: all 0.3s;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			padding: 20px;
+
+			background: #fd746c;  /* fallback for old browsers */
+			background: -webkit-linear-gradient(to right, #ff9068, #fd746c);  /* Chrome 10-25, Safari 5.1-6 */
+			background: linear-gradient(to right, #ff9068, #fd746c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+		}
+
+		h1 {
+			color: white;
+			font-size: 94px;
+			font-weight: 100;
+			margin: 0;
+			-webkit-user-select: none;
+			user-select: none;
+			margin-top: auto;
+		}
+
+		h2 {
+			color: white;
+			font-weight: 100;
+			font-size: 16px;
+			margin-top: auto;
+		}
+	</style>
+</head>
+<body>
+
+	<main id="main">
+		<h1 id="tempDisplay">46°</h1>
+		<h2>Average temperature: <span id="averageDisplay">46</span>°</h2>
+	</main>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io.connect('http://207.154.248.133')
+		var main = document.getElementById('main')
+		var tempDisplay = document.getElementById('tempDisplay')
+		var averageDisplay = document.getElementById('averageDisplay')
+
+		var map = function(n, start1, stop1, start2, stop2) {
+			return ((n-start1)/(stop1-start1))*(stop2-start2)+start2
+		}
+
+		function getColorFromCelsius(temp, brightness) {
+			var hslValue = map(temp, -20, 50, 180, 410)
+			// if(hslValue > 260 && hslValue < 350) hslValue = map(hslValue, 260, 350, 340, 370)
+			return 'hsl(' + hslValue + ', 100%,'+ (brightness || 70) + '%)'
+		}
+
+		function getGradientFromCelsius(temp) {
+			return 'linear-gradient(135deg,'
+				+ getColorFromCelsius(temp, 65)
+				+ ','
+				+ getColorFromCelsius(temp, 75)
+				+ ')'
+		}
+
+		var temps = []
+
+		socket.on('temp:in', function(temp) {
+			tempDisplay.textContent = String(temp) + '°'
+			temps.push(Number(temp))
+			var average = temps.reduce((a, b) => a + b, 0) / temps.length
+			averageDisplay.textContent = String(average.toFixed(2))
+			main.style.background = getGradientFromCelsius(temp)
+		})
+	</script>
+</body>
+</html>
