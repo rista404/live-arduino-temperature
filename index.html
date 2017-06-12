@@ -74,11 +74,12 @@
 
 	<main id="main">
 		<div id="mask"></div>
-		<h1 id="tempDisplay">46°</h1>
+		<h1 id="tempDisplay"><span class="celsius">46</span>°</h1>
 		<h2>Average temperature: <span id="averageDisplay">46</span>°</h2>
 	</main>
 
 	<script src="/socket.io/socket.io.js"></script>
+	<script src="./countup.min.js"></script>
 	<script>
 		(function() {
 			var socket = io.connect('http://207.154.248.133')
@@ -87,6 +88,14 @@
 			var mask = document.getElementById('mask')
 			var tempDisplay = document.getElementById('tempDisplay')
 			var averageDisplay = document.getElementById('averageDisplay')
+
+			var options = {
+				useEasing : true,
+				useGrouping : false,
+				decimal : '.',
+			};
+			var counter = new CountUp(".celsius", 0, 46, 0, 2.5, options);
+			counter.start();
 
 			var map = function(n, start1, stop1, start2, stop2) {
 				return ((n-start1)/(stop1-start1))*(stop2-start2)+start2
@@ -114,7 +123,8 @@
 			var maskOn = false
 
 			socket.on('temp:in', function(temp) {
-				tempDisplay.textContent = String(temp) + '°'
+				// tempDisplay.textContent = String(temp) + '°'
+				counter.update(Number(temp))
 				temps.push(Number(temp))
 				var average = temps.reduce((a, b) => a + b, 0) / temps.length
 				averageDisplay.textContent = String(average.toFixed(2))
