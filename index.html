@@ -74,7 +74,7 @@
 
 	<main id="main">
 		<div id="mask"></div>
-		<h1 id="tempDisplay"><span class="celsius">46</span>°</h1>
+		<h1 id="tempDisplay"><span id="celsius">46</span>°</h1>
 		<h2>Average temperature: <span id="averageDisplay">46</span>°</h2>
 	</main>
 
@@ -94,7 +94,7 @@
 				useGrouping : false,
 				decimal : '.',
 			}
-			var counter = new CountUp(".celsius", 0, 46, 0, 2.5, options)
+			var counter = new CountUp("celsius", 0, 46, 0, 2.5, options)
 			counter.start()
 
 			var map = function(n, start1, stop1, start2, stop2) {
