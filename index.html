@@ -75,7 +75,7 @@
 	<main id="main">
 		<div id="mask"></div>
 		<h1 id="tempDisplay"><span id="celsius">46</span>°</h1>
-		<h2>Average temperature: <span id="averageDisplay">46</span>°</h2>
+		<h2>Просечна температура: <span id="averageDisplay">46</span>°</h2>
 	</main>
 
 	<script src="/socket.io/socket.io.js"></script>
@@ -122,7 +122,7 @@
 			var temps = []
 			var maskOn = false
 
-			socket.on('temp:in', function(temp) {
+			function input(temp) {
 				// tempDisplay.textContent = String(temp) + '°'
 				counter.update(Number(temp))
 				temps.push(Number(temp))
@@ -139,8 +139,9 @@
 					mask.style.opacity = 1
 					maskOn = true
 				}
+			}
 
-			})
+			socket.on('temp:in', input)
 
 		})()
 	</script>
