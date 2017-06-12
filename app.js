@@ -4,6 +4,8 @@ const io = require('socket.io')(server)
 
 server.listen(80)
 
+app.use(express.static(path.join(__dirname, 'public')))
+
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/index.html')
 })

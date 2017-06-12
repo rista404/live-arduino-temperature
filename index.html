@@ -93,9 +93,9 @@
 				useEasing : true,
 				useGrouping : false,
 				decimal : '.',
-			};
-			var counter = new CountUp(".celsius", 0, 46, 0, 2.5, options);
-			counter.start();
+			}
+			var counter = new CountUp(".celsius", 0, 46, 0, 2.5, options)
+			counter.start()
 
 			var map = function(n, start1, stop1, start2, stop2) {
 				return ((n-start1)/(stop1-start1))*(stop2-start2)+start2
