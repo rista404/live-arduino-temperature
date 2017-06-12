@@ -78,56 +78,59 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
-		var socket = io.connect('http://207.154.248.133')
+		(function() {
+			var socket = io.connect('http://207.154.248.133')
 
-		var main = document.getElementById('main')
-		var mask = document.getElementById('mask')
-		var tempDisplay = document.getElementById('tempDisplay')
-		var averageDisplay = document.getElementById('averageDisplay')
+			var main = document.getElementById('main')
+			var mask = document.getElementById('mask')
+			var tempDisplay = document.getElementById('tempDisplay')
+			var averageDisplay = document.getElementById('averageDisplay')
 
-		var map = function(n, start1, stop1, start2, stop2) {
-			return ((n-start1)/(stop1-start1))*(stop2-start2)+start2
-		}
-
-		function getColorFromCelsius(temp, brightness) {
-			// var hslValue = map(temp, -20, 50, 180, 410)
-			if(temp <= 15)
-				var hslValue = map(temp, -20, 15, 180, 260)
-			else
-				var hslValue = map(temp, 15, 50, 40, -10)
-			// if(hslValue > 260 && hslValue < 350) hslValue = map(hslValue, 260, 350, 340, 370)
-			return 'hsl(' + hslValue + ', 100%,'+ (brightness || 70) + '%)'
-		}
-
-		function getGradientFromCelsius(temp) {
-			return 'linear-gradient(135deg,'
-				+ getColorFromCelsius(temp, 60)
-				+ ','
-				+ getColorFromCelsius(temp, 80)
-				+ ')'
-		}
-
-		var temps = []
-		var maskOn = false
-
-		socket.on('temp:in', function(temp) {
-			tempDisplay.textContent = String(temp) + '°'
-			temps.push(Number(temp))
-			var average = temps.reduce((a, b) => a + b, 0) / temps.length
-			averageDisplay.textContent = String(average.toFixed(2))
-
-			if(maskOn) {
-				main.style.background = getGradientFromCelsius(Number(temp))
-				mask.style.opacity = 0
-				maskOn = false
-			}
-			else {
-				mask.style.background = getGradientFromCelsius(Number(temp))
-				mask.style.opacity = 1
-				maskOn = true
+			var map = function(n, start1, stop1, start2, stop2) {
+				return ((n-start1)/(stop1-start1))*(stop2-start2)+start2
 			}
 
-		})
+			function getColorFromCelsius(temp, brightness) {
+				// var hslValue = map(temp, -20, 50, 180, 410)
+				if(temp <= 15)
+					var hslValue = map(temp, -20, 15, 180, 260)
+				else
+					var hslValue = map(temp, 15, 50, 40, -10)
+				// if(hslValue > 260 && hslValue < 350) hslValue = map(hslValue, 260, 350, 340, 370)
+				return 'hsl(' + hslValue + ', 100%,'+ (brightness || 70) + '%)'
+			}
+
+			function getGradientFromCelsius(temp) {
+				return 'linear-gradient(135deg,'
+					+ getColorFromCelsius(temp, 60)
+					+ ','
+					+ getColorFromCelsius(temp, 80)
+					+ ')'
+			}
+
+			var temps = []
+			var maskOn = false
+
+			socket.on('temp:in', function(temp) {
+				tempDisplay.textContent = String(temp) + '°'
+				temps.push(Number(temp))
+				var average = temps.reduce((a, b) => a + b, 0) / temps.length
+				averageDisplay.textContent = String(average.toFixed(2))
+
+				if(maskOn) {
+					main.style.background = getGradientFromCelsius(Number(temp))
+					mask.style.opacity = 0
+					maskOn = false
+				}
+				else {
+					mask.style.background = getGradientFromCelsius(Number(temp))
+					mask.style.opacity = 1
+					maskOn = true
+				}
+
+			})
+
+		})()
 	</script>
 </body>
 </html>
