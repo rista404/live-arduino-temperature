@@ -16,7 +16,7 @@ io.on('connection', (socket) => {
 
 	setInterval(() => {
 		socket.emit('temp:in', random(-12, 45))
-	}, 2000)
+	}, 5000)
 
 	socket.on('temp:server', (data) => {
 		console.log(data)
