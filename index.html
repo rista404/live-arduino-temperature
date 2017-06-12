@@ -71,7 +71,11 @@
 		}
 
 		function getColorFromCelsius(temp, brightness) {
-			var hslValue = map(temp, -20, 50, 180, 410)
+			// var hslValue = map(temp, -20, 50, 180, 410)
+			if(temp <= 15)
+				var hslValue = map(temp, -20, 15, 180, 260)
+			else
+				var hslValue = map(temp, 15, 50, 40, -10)
 			// if(hslValue > 260 && hslValue < 350) hslValue = map(hslValue, 260, 350, 340, 370)
 			return 'hsl(' + hslValue + ', 100%,'+ (brightness || 70) + '%)'
 		}
@@ -91,7 +95,7 @@
 			temps.push(Number(temp))
 			var average = temps.reduce((a, b) => a + b, 0) / temps.length
 			averageDisplay.textContent = String(average.toFixed(2))
-			main.style.background = getGradientFromCelsius(temp)
+			main.style.background = getGradientFromCelsius(Number(temp))
 		})
 	</script>
 </body>
