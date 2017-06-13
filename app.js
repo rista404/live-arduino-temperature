@@ -25,6 +25,6 @@ io.on('connection', (socket) => {
 	socket.on('temp:server', (data) => {
 		console.log(data)
 
-		socket.emit('temp:in', Number(data))
+		io.emit('temp:in', Number(data))
 	})
 })
