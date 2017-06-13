@@ -8,5 +8,5 @@ const port = new SerialPort('/dev/cu.wchusbserial1420', {
 
 port.on('data', function (data) {
 	console.log('Data: ' + data);
-	socket.emit('temp:server')
+	socket.emit('temp:server', data)
 });
